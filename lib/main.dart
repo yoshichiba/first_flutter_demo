@@ -1,8 +1,5 @@
-// 「Material」はAndroid系統のWidget
-import 'package:flutter/material.dart';
-
 // 「Cupertino」はiOS系統のWidget
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 
 // void関数は「戻り値がない」ことを示す。
 // もし関数が値を返す場合には、その値の型を指定する
@@ -32,18 +29,13 @@ class MyApp extends StatelessWidget {
   // StatelessWidgetクラスから継承されたbuildメソッドをオーバーライドしている
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const CupertinoApp(
       title: 'Flutter Demo', // アプリのタイトル
-      theme: ThemeData(
+      theme: CupertinoThemeData(
         // アプリのカラースキーム
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        // Material Design3を有効化
-        useMaterial3: true,
+        primaryColor: CupertinoColors.activeBlue,
       ),
-      // homeプロパティでアプリのホーム画面を設定
-      // MyHomePageクラスを指定し、タイトルとして"Flutter Demo Home Page"を渡している
-      // MyHomePageはこのアプリが起動した際に最初に表示される画面
-      home: const MyHomePage(title: 'Flutterヘッダー'),
+      home: MyHomePage(title: 'Flutterヘッダー'),
     );
   }
 }
@@ -103,77 +95,91 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Scaffoldは、Flutterアプリの基本的なレイアウト構造を提供するウィジェット
-    // appBar/body/floatingActionButtonプロパティを使って、各部分を簡単に設定できる
-    return Scaffold(
-      // AppBarはアプリ画面の上部に表示されるバー
-      // ここではアプリのタイトルや背景色が設定される
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // title: Text(widget.title),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(widget.title),
+    // scaffoldの代わりに、iOSスタイルのCupertinoPageScaffoldを使用
+    // navigationBar/childプロパティを使って、各部分を簡単に設定できる
+    return CupertinoPageScaffold(
+      // CupertinoNavigationBarはiOSスタイルのナビゲーションバー
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.activeBlue,
+        // loadingプロパティは、ナビゲーションバーの左側に表示されるWidget
+        leading: Align(
+          alignment: Alignment.centerLeft, // 左寄せかつ上下中央
+          child: Text(
+            widget.title,
+            style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
+          ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _incrementCounter,
+        // trailingプロパティは、ナビゲーションバーの右側に表示されるWidget
+        // loadingは左寄せ、trailingは右寄せ、middleは中央寄せ
+        trailing: CupertinoButton(
+          // paddingプロパティは、ボタンの内側の余白を設定
+          // 余白をなくし、アイコンのみ表示されるように設定
+          padding: EdgeInsets.zero,
+          onPressed: _incrementCounter,
+          child: const Icon(
+            CupertinoIcons.add,
+            color: CupertinoColors.white, // アイコンを白に設定
+          ),
+        ),
+      ),
+      // StackWidgetは、子Widgetを重ねて表示するためのWidget
+      child: Stack(
+        // childrenプロパティには、重ねて表示する子Widgetを設定
+        children: [
+          // CenterWidgetは、指定した子Widgetを中央に配置するためのWidget
+          Center(
+            // ColumnWidgetは、複数の子Widgetを縦方向に並べるためのレイアウトWidget
+            child: Column(
+              // mainAxisAlignmentプロパティは、縦方向の中央に配置する
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Hello Flutter!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  'カウンターが1ずつ増加します',
+                ),
+                Text(
+                  // 文字列内に変数を埋め込むため$を使用する
+                  '$_counter',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // PositionedWidgetは、子Widgetを指定した位置に配置するためのWidget
+          Positioned(
+            // 画面右下から50px上、30px左に配置
+            bottom: 50,
+            right: 30,
+            // RowWidgetは、複数の子Widgetを横方向に並べるためのレイアウトWidget
+            child: Row(
+              // mainAxisAlignmentプロパティは、横方向の右寄せに配置する
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CupertinoButton(
+                  onPressed: _decrementCounter,
+                  padding: EdgeInsets.zero,
+                  child: const Icon(CupertinoIcons.minus_circle, size: 60),
+                ),
+                const SizedBox(width: 16),
+                CupertinoButton(
+                  onPressed: _incrementCounter,
+                  padding: EdgeInsets.zero,
+                  child: const Icon(CupertinoIcons.add_circled, size: 60),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-      // bodyは画面の中央部分のレイアウトを構成
-      // Center Widgetは、指定した子Widgetを中央に配置するためのWidget
-      body: Center(
-        // Column Widgetは、複数の子Widgetを縦方向に並べるためのレイアウトWidget
-        child: Column(
-          // MainAxisAlignment.centerにより、縦方向の中央に配置する
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // 初期表示のテキスト
-            const Text(
-              'Hello Flutter!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              'カウンターが1ずつ増加します',
-            ),
-            Text(
-              // 文字列内に変数を埋め込むため$を使用する
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: _decrementCounter,
-            tooltip: 'Decrement',
-            child: const Icon(Icons.remove),
-          ),
-          const SizedBox(width: 10),
-          FloatingActionButton(
-            onPressed: _incrementCounter,
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      // floatingActionButtonは画面右下に表示されるボタン
-      // floatingActionButton: FloatingActionButton(
-      //   // ボタンが押されると_incrementCounterメソッドが呼ばれ、カウンターが増加する
-      //   onPressed: _incrementCounter,
-      //   // ボタンのツールチップ（ホバーまたは長押しで表示される説明）
-      //   tooltip: 'Increment',
-      //   // ボタンにプラスアイコンを設定
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }
