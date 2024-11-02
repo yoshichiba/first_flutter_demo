@@ -89,6 +89,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // カウンターを減少させるメソッド
+  // アンダーバーが付いているのでプライベート変数として定義されている
+  void _decrementCounter() {
+    // setStateメソッドは状態が変化したことを通知し、Widgetを再描画するために使用する
+    // setStateを呼び出さずに_counterを更新した場合、変更が表示されない
+    setState(() {
+      // _counterを1ずつ減少させる
+      // アンダーバーが付いているのでプライベート変数として定義されている
+      _counter--;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Scaffoldは、Flutterアプリの基本的なレイアウト構造を提供するウィジェット
@@ -98,7 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // ここではアプリのタイトルや背景色が設定される
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        // title: Text(widget.title),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(widget.title),
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
@@ -116,7 +132,14 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // 初期表示のテキスト
             const Text(
-              'Hello Flutter',
+              'Hello Flutter!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              'カウンターが1ずつ増加します',
             ),
             Text(
               // 文字列内に変数を埋め込むため$を使用する
@@ -126,15 +149,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // floatingActionButtonは画面右下に表示されるボタン
-      floatingActionButton: FloatingActionButton(
-        // ボタンが押されると_incrementCounterメソッドが呼ばれ、カウンターが増加する
-        onPressed: _incrementCounter,
-        // ボタンのツールチップ（ホバーまたは長押しで表示される説明）
-        tooltip: 'Increment',
-        // ボタンにプラスアイコンを設定
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: _decrementCounter,
+            tooltip: 'Decrement',
+            child: const Icon(Icons.remove),
+          ),
+          const SizedBox(width: 10),
+          FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
+      // floatingActionButtonは画面右下に表示されるボタン
+      // floatingActionButton: FloatingActionButton(
+      //   // ボタンが押されると_incrementCounterメソッドが呼ばれ、カウンターが増加する
+      //   onPressed: _incrementCounter,
+      //   // ボタンのツールチップ（ホバーまたは長押しで表示される説明）
+      //   tooltip: 'Increment',
+      //   // ボタンにプラスアイコンを設定
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
