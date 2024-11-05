@@ -78,9 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+            const SizedBox(height: 20), // テキストと画像の間にスペースを追加
+            RotatedBox(
+              quarterTurns: 1, // 90度回転
+              child: Image.asset(
+                'assets/images/sample.png',
+                width: 200,
+                height: 200,
+              ),
             ),
           ],
         ),
